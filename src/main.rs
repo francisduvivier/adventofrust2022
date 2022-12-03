@@ -5,7 +5,7 @@ pub use util::*;
 
 fn main() {
     println!("Hello, world!");
-    day3a::solve(read_input(3));
+    println!("Solution: {}", day3a::solve(read_input(3)));
 }
 
 
