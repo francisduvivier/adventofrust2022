@@ -10,5 +10,5 @@ pub fn read_input(day: i8) -> Vec<String> {
         .expect("Should have been able to read the file");
 
     println!("input size [{}]", contents.len());
-    return contents.to_string().split("\n").map(|s| s.to_string()).collect();
+    return contents.lines().map(|s| s.to_string()).collect();
 }
