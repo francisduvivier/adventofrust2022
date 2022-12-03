@@ -6,18 +6,18 @@ pub fn solve(input_lines: Vec<String>) -> String {
     println!("Hello, day3a!");
     println!("nb lines: {}", input_lines.len());
     let mut count = 0;
-    for line in input_lines {
+    let line_triple: Vec<String>;
+    for chunk in input_lines.chunks(3) {
         // println!("line: {}", line);
-        count += line_score(line);
+        count += group_score(Vec::from(chunk));
     }
     return count.to_string();
 }
 
-fn line_score(line: String) -> i32 {
-    let (left, right) = line.split_at(line.len() / 2);
+fn group_score(lines: Vec<String>) -> i32 {
     // println!("sizes {}-{}", left.len(), right.len());
-    for letter in left.chars() {
-        if right.contains(letter) {
+    for letter in lines[0].chars() {
+        if lines[1].contains(letter) && lines[2].contains(letter) {
             return char_score(letter);
         }
     }
