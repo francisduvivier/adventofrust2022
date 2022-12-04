@@ -2,11 +2,11 @@ use std::env;
 use std::fs;
 use std::str::Split;
 
-pub fn solve(inputLines: Vec<String>) -> String {
+pub fn solve(input_lines: Vec<String>) -> String {
     println!("Hello, day3a!");
-    println!("nb lines: {}", inputLines.len());
+    println!("nb lines: {}", input_lines.len());
     let mut count = 0;
-    for line in inputLines {
+    for line in input_lines {
         // println!("line: {}", line);
         count += line_score(line);
     }
@@ -35,6 +35,6 @@ fn char_score(letter: char) -> i32 {
 fn char_code(letter: char) -> u8 {
     let mut letter_number: &mut [u8] = &mut [0];
     letter.encode_utf8(letter_number);
-    let charCode = letter_number[0];
-    charCode
+    let value = letter_number[0];
+    value
 }
