@@ -12,3 +12,10 @@ pub fn read_input(day: i8) -> Vec<String> {
     println!("input size [{}]", contents.len());
     return contents.lines().map(|s| s.to_string()).collect();
 }
+
+pub fn char_code(letter: char) -> u8 {
+    let mut letter_number: &mut [u8] = &mut [0];
+    letter.encode_utf8(letter_number);
+    let value = letter_number[0];
+    value
+}

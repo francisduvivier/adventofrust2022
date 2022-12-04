@@ -1,6 +1,7 @@
 use std::env;
 use std::fs;
 use std::str::Split;
+pub use crate::util::*;
 
 pub fn solve(input_lines: Vec<String>) -> String {
     println!("Hello, day3a!");
@@ -30,11 +31,4 @@ fn char_score(letter: char) -> i32 {
         return (1 + letter_code - char_code('a')) as i32;
     }
     return (27 + letter_code - char_code('A')) as i32;
-}
-
-fn char_code(letter: char) -> u8 {
-    let mut letter_number: &mut [u8] = &mut [0];
-    letter.encode_utf8(letter_number);
-    let value = letter_number[0];
-    value
 }
