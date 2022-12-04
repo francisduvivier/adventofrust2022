@@ -1,7 +1,6 @@
 use std::env;
 use std::fs;
 use std::str::Split;
-pub use crate::util::*;
 
 pub fn solve(input_lines: Vec<String>) -> String {
     println!("nb lines: {}", input_lines.len());
@@ -14,20 +13,17 @@ pub fn solve(input_lines: Vec<String>) -> String {
 }
 
 fn line_score(line: String) -> i32 {
-    let (left, right) = line.split_at(line.len() / 2);
+    let number_pairs = line.split(',').map(|numbers| numbers.split('-').collect::<Vec<&str>>()).collect::<Vec<Vec<&str>>>();
     // println!("sizes {}-{}", left.len(), right.len());
-    for letter in left.chars() {
-        if right.contains(letter) {
-            return char_score(letter);
-        }
+    let lower_left: i32 = number_pairs[0][0].parse().unwrap();
+    let upper_left: i32 = number_pairs[0][1].parse().unwrap();
+    let lower_right: i32 = number_pairs[1][0].parse().unwrap();
+    let upper_right: i32 = number_pairs[1][1].parse().unwrap();
+    if (lower_left <= lower_right && upper_left >= upper_right) {
+        return 1;
+    }
+    if (lower_left >= lower_right && upper_left <= upper_right) {
+        return 1;
     }
     return 0;
-}
-
-fn char_score(letter: char) -> i32 {
-    let letter_code = char_code(letter);
-    if (letter >= 'a' && letter <= 'z') {
-        return (1 + letter_code - char_code('a')) as i32;
-    }
-    return (27 + letter_code - char_code('A')) as i32;
 }
