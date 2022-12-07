@@ -6,14 +6,8 @@ use regex::Regex;
 use substring::Substring;
 
 pub fn solve(input_lines: Vec<String>) -> String {
-    let debug_parse = false;
+    let debug = false;
     println!("nb lines: {}", input_lines.len());
-    let (stacks, moves) = parse_input(input_lines, debug_parse);
-    println!("moves {}, stacks {}", moves.len(), stacks.len());
-    return "TODO".to_string();
-}
-
-fn parse_input(input_lines: Vec<String>, debug_parse: bool) -> (Vec<Vec<String>>, Vec<Move>) {
     let mut stacks: Vec<Vec<String>> = vec![vec![]; 9];
     let mut moves: Vec<Move> = vec![];
     for line in input_lines {
@@ -25,20 +19,37 @@ fn parse_input(input_lines: Vec<String>, debug_parse: bool) -> (Vec<Vec<String>>
                 if chunk_string.starts_with("[") {
                     let letter = chunk_string.substring(1, 2);
                     stacks[i].push(letter.to_string());
-                    if debug_parse { println!("stacks[{}][{}].unwrap(): {}", i, (stacks[i].len() - 1), stacks[i].last().unwrap()); }
+                    if debug { println!("stacks[{}][{}].unwrap(): {}", i, (stacks[i].len() - 1), stacks[i].last().unwrap()); }
                 }
                 i += 1;
             }
         } else if line.starts_with("move") {
             let mv = parse_move(line);
-            if debug_parse { println!("Move {} from {} to {}", mv.amount, mv.from, mv.to); }
-            moves.push(mv)
+            if debug { println!("Move {} from {} to {}", mv.amount, mv.from, mv.to); }
+            moves.push(mv);
         } else if !line.is_empty() && !line.starts_with(" ") {
             print!("l {}", line);
             assert!(false);
         }
     }
-    (stacks, moves)
+    println!("moves {}, stacks {}", moves.len(), stacks.len());
+    for mut i in 0..stacks.len() {
+        if debug { println!("stacks last before [{}]", stacks[i].last().unwrap()); }
+        stacks[i].reverse();
+        if debug { println!("stacks first after [{}]", stacks[i].first().unwrap()); }
+    }
+    for mv in moves {
+        for _ in 0..mv.amount {
+            let popped = stacks[(mv.from - 1) as usize].pop().unwrap();
+            if debug { println!("popped {} from {}", popped, mv.from as usize) }
+            stacks[(mv.to - 1) as usize].push(popped);
+        }
+    }
+    let mut chars: Vec<&str> = vec![];
+    for mut i in 0..stacks.len() {
+        chars.push(stacks[i].last().unwrap())
+    }
+    return chars.join("");
 }
 
 struct Move {
