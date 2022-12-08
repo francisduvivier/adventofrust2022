@@ -7,16 +7,16 @@ use substring::Substring;
 use std::collections::HashSet;
 use std::iter::FromIterator;
 
-pub fn solve(input_lines: Vec<String>) -> i32 {
+pub fn solve(input_lines: Vec<String>, amount: usize) -> i32 {
     let mut quad: Vec<char> = vec![];
     let mut i = 0;
     for curr_char in input_lines[0].chars() {
         quad.insert(0, curr_char);
-        if (quad.len() > 4) {
+        if (quad.len() > amount) {
             quad.pop();
         }
         i += 1;
-        if vec_to_set(&quad).len() == 4 {
+        if vec_to_set(&quad).len() == amount {
             return i;
         }
     }
