@@ -5,17 +5,19 @@ mod day4a;
 mod day4b;
 mod day5a;
 mod day5b;
+mod day6a;
 
 pub use util::*;
 
 fn main() {
-    println!("Hello, world!");
+    println!("Starting Rust Main!");
     // println!("Solution: {}", day3a::solve(read_input(3)));
     // println!("Solution: {}", day3b::solve(read_input(3)));
     // println!("Solution: {}", day4a::solve(read_input(4)));
     // println!("Solution: {}", day4b::solve(read_input(4)));
     // println!("Solution: {}", day5a::solve(read_input(5)));
-    println!("Solution: {}", day5b::solve(read_input(5)));
+    // println!("Solution: {}", day5b::solve(read_input(5)));
+    println!("Solution: {}", day6a::solve(read_input(6)));
 }
 
 
