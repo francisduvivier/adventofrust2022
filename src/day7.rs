@@ -10,15 +10,14 @@ use std::fmt::format;
 use std::iter::FromIterator;
 
 pub fn solve(input_lines: Vec<String>) -> i32 {
-    let mut size_map: HashMap<&str, i32> = HashMap::new();
-    size_map.insert("/", 10);
+    let mut size_map: HashMap<String, i32> = HashMap::new();
+    size_map.insert("/".to_string(), 0);
     let max_size = 100000;
     let mut mode = "wait";
     let mut cwd: Vec<&str> = vec![];
-    for line in input_lines {
-        let line_clone = line.clone();
-        let split = line_clone.split(" ");
-        let line_pieces: Vec<&str> = split.clone().collect();
+    let separator = "/";
+    let lines_as_pieces: Vec<Vec<&str>> = input_lines.iter().map(|line| line.split(" ").collect()).collect();
+    for line_pieces in lines_as_pieces {
         if line_pieces[0] == "$" {
             mode = "wait";
         }
@@ -30,7 +29,7 @@ pub fn solve(input_lines: Vec<String>) -> i32 {
                         mode = "ls";
                     }
                     "cd" => {
-                        let dir = line_pieces[1];
+                        let dir = line_pieces[2];
                         match dir {
                             "/" => { cwd.clear(); }
                             ".." => { cwd.pop(); }
@@ -47,13 +46,18 @@ pub fn solve(input_lines: Vec<String>) -> i32 {
                     }
                     &_ => {
                         let file_size: i32 = line_pieces[0].parse().unwrap();
-                        let mut curr_dir = String::new();
-                        size_map.insert(curr_dir.as_str(), size_map.get("/").unwrap_or(&0) + file_size);
+                        let mut curr_dir = separator.clone().to_string();
+                        size_map.insert(curr_dir.clone(), *size_map.get(&curr_dir).unwrap_or(&0) + file_size);
+                        println!("Adding file size {} to {}", file_size, curr_dir);
                         for sub_dir in cwd.clone() {
                             // let subby = format!("{}/{}", curr_dir, sub_dir);
                             // curr_dir = subby.clone().as_mut_str();
-                            curr_dir = format!("{}/{}", curr_dir, sub_dir);
-                            size_map.insert(curr_dir.as_str(), size_map.get("/").unwrap_or(&0) + file_size);
+                            // curr_dir = format!("{}/{}", &curr_dir.clone(), sub_dir);
+
+                            let addition = (sub_dir.to_string() + separator).to_string();
+                            curr_dir += addition.clone().as_str();
+                            println!("Adding file size {} to {}", file_size, curr_dir);
+                            size_map.insert(curr_dir.clone(), *size_map.get(&curr_dir).unwrap_or(&0) + file_size);
                         }
                     }
                 }
@@ -61,14 +65,15 @@ pub fn solve(input_lines: Vec<String>) -> i32 {
             &_ => { assert!(false); }
         }
     }
-    sum_smaller(&size_map, max_size);
-    return 0;
+    println!("total size: {}", size_map.get(separator).unwrap());
+    return sum_smaller(&size_map, max_size);
 }
 
-fn sum_smaller(siz_mMap: &HashMap<&str, i32>, max_size: i32) -> i32 {
+fn sum_smaller(size_map: &HashMap<String, i32>, max_size: i32) -> i32 {
     let mut sum = 0;
-    for (_key, val) in siz_mMap {
-        if val <= &max_size {
+    for (_key, val) in size_map {
+        println!(" size_map[{}] is {}", *_key, *val);
+        if *val <= max_size {
             sum += val;
         }
     }
