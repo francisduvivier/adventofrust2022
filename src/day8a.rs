@@ -25,7 +25,7 @@ pub fn solve(input_lines: Vec<String>) -> i32 {
     }
 
     for horizontal_line in map.clone() {
-        add_visibles(horizontal_line, &mut visibles);
+        add_all_visibles(horizontal_line, &mut visibles);
     }
     let mut x = 0;
     for horizontal_line in map {
@@ -41,15 +41,25 @@ pub fn solve(input_lines: Vec<String>) -> i32 {
     }
 
     for vertical_line in transposed_map {
-        add_visibles(vertical_line, &mut visibles);
+        add_all_visibles(vertical_line, &mut visibles);
     }
     return visibles.len() as i32;
 }
 
+fn add_all_visibles(pairs: Vec<(String, i32)>, visibles: &mut HashSet<String>) {
+    let mut cloned = pairs.clone();
+    add_visibles(pairs, visibles);
+    cloned.reverse();
+    add_visibles(cloned, visibles);
+}
+
 fn add_visibles(pairs: Vec<(String, i32)>, visibles: &mut HashSet<String>) {
-    // todo!()
+    let mut highest = -1;
     for pair in pairs {
-        visibles.insert(pair.0); //TODO
+        if (pair.1 > highest) {
+            highest = pair.1;
+            visibles.insert(pair.0);
+        }
     }
 }
 
