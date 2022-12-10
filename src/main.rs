@@ -9,6 +9,7 @@ mod day6;
 mod day7a;
 mod day7b;
 mod day8a;
+mod day8b;
 
 pub use util::*;
 
@@ -24,7 +25,8 @@ fn main() {
     // println!("Solution: {}", day6::solve(read_input(6), 14));
     // println!("Solution: {}", day7a::solve(read_input(7)));
     // println!("Solution: {}", day7b::solve(read_input(7)));
-    println!("Solution: {}", day8a::solve(read_input(8)));
+    // println!("Solution: {}", day8a::solve(read_input(8)));
+    println!("Solution: {}", day8b::solve(read_input(8)));
 }
 
 
