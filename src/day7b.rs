@@ -12,7 +12,6 @@ use std::iter::FromIterator;
 pub fn solve(input_lines: Vec<String>) -> i32 {
     let mut size_map: HashMap<String, i32> = HashMap::new();
     size_map.insert("/".to_string(), 0);
-    let max_size = 100000;
     let mut mode = "wait";
     let mut cwd: Vec<&str> = vec![];
     let separator = "/";
@@ -66,16 +65,16 @@ pub fn solve(input_lines: Vec<String>) -> i32 {
         }
     }
     println!("total size: {}", size_map.get(separator).unwrap());
-    return sum_smaller(&size_map, max_size);
+    return find_smallest_bigger_than(&size_map, 70000000 - 30000000, *size_map.get(separator).unwrap());
 }
 
-fn sum_smaller(size_map: &HashMap<String, i32>, max_size: i32) -> i32 {
-    let mut sum = 0;
+fn find_smallest_bigger_than(size_map: &HashMap<String, i32>, max_size: i32, curr_size: i32) -> i32 {
+    let mut min = 70000000;
     for (_key, val) in size_map {
         println!(" size_map[{}] is {}", *_key, *val);
-        if *val <= max_size {
-            sum += val;
+        if curr_size - *val <= max_size && *val < min {
+            min = *val;
         }
     }
-    return sum;
+    return min;
 }
