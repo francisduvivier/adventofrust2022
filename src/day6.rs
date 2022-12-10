@@ -6,6 +6,7 @@ use regex::Regex;
 use substring::Substring;
 use std::collections::HashSet;
 use std::iter::FromIterator;
+use crate::vec_to_set;
 
 pub fn solve(input_lines: Vec<String>, amount: usize) -> i32 {
     let mut quad: Vec<char> = vec![];
@@ -21,8 +22,4 @@ pub fn solve(input_lines: Vec<String>, amount: usize) -> i32 {
         }
     }
     return 0;
-}
-
-fn vec_to_set(vec: &Vec<char>) -> HashSet<&char> {
-    HashSet::from_iter(vec)
 }

@@ -1,6 +1,7 @@
 use std::{env, iter};
 use std::fs;
 use std::str::Split;
+use std::collections::HashSet;
 
 pub fn read_input(day: i8) -> Vec<String> {
     let file_path = format!("./input/day{}.txt", day);
@@ -18,4 +19,9 @@ pub fn char_code(letter: char) -> u8 {
     letter.encode_utf8(letter_number);
     let value = letter_number[0];
     value
+}
+
+
+pub fn vec_to_set(vec: &Vec<char>) -> HashSet<&char> {
+    HashSet::from_iter(vec)
 }
