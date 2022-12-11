@@ -10,7 +10,6 @@ use std::fmt::format;
 use std::iter::FromIterator;
 
 pub fn solve(input_lines: Vec<String>) -> i32 {
-    let mut visibles: HashSet<String> = HashSet::new();
     let mut map: Vec<Vec<(String, i32)>> = vec![];
     let mut transposed_map: Vec<Vec<(String, i32)>> = vec![];
     for x in 0..input_lines.len() {
@@ -24,43 +23,53 @@ pub fn solve(input_lines: Vec<String>) -> i32 {
         println!("{:?}", map[x]);
     }
 
-    for horizontal_line in map.clone() {
-        add_all_visibles(horizontal_line, &mut visibles);
-    }
+
     let mut x = 0;
-    for horizontal_line in map {
+    for horizontal_line in &map {
         let mut y = 0;
         for val in horizontal_line {
             if x == 0 {
                 transposed_map.push(vec![]);
             }
-            transposed_map[y].push(val);
+            transposed_map[y].push((val.clone().0, val.1));
             y += 1;
         }
         x += 1;
     }
-
-    for vertical_line in transposed_map {
-        add_all_visibles(vertical_line, &mut visibles);
+    let mut max_score = 0;
+    for x in 0..input_lines.len() {
+        for y in 0..input_lines[x].len() {
+            let score = calc_score(&map, &transposed_map, x, y);
+            if score > max_score {
+                max_score = score;
+            }
+        }
     }
-    return visibles.len() as i32;
+    return max_score;
 }
 
-fn add_all_visibles(pairs: Vec<(String, i32)>, visibles: &mut HashSet<String>) {
-    let mut cloned = pairs.clone();
-    add_visibles(pairs, visibles);
-    cloned.reverse();
-    add_visibles(cloned, visibles);
+fn calc_score(map: &Vec<Vec<(String, i32)>>, transposed_map: &Vec<Vec<(String, i32)>>, x: usize, y: usize) -> i32 {
+    let mut score = 1;
+    let vec = map[x].clone();
+    let (left, right_slice) = vec.split_at(y);
+    score *= count_visibles(&right_slice.to_vec()); //TODO remove first elem or slice different
+    let mut left_side = left.to_vec();
+    left_side.reverse();
+    score *= count_visibles(&left_side);
+
+    score
 }
 
-fn add_visibles(pairs: Vec<(String, i32)>, visibles: &mut HashSet<String>) {
+fn count_visibles(pairs: &Vec<(String, i32)>) -> i32 {
     let mut highest = -1;
+    let mut count = 0;
     for pair in pairs {
         if (pair.1 > highest) {
             highest = pair.1;
-            visibles.insert(pair.0);
+            count += 1;
         }
     }
+    return count;
 }
 
 fn int_from_char_in_lines(input_lines: &Vec<String>, x: usize, y: usize) -> i32 {
