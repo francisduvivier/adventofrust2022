@@ -18,11 +18,11 @@ const OP_NOOP: &'static str = "noop";
 
 
 pub fn solve(input_lines: Vec<String>, sum_cycles: &Vec<usize>) -> i32 {
-    let mut sum_of_wanted_cycles = 0;
-    let mut reg_val = 1;
+    let mut solution = 0;
+    let mut reg_val: i32 = 1;
     let lines_as_pieces: Vec<Vec<&str>> = input_lines.iter().map(|line| line.split(" ").collect()).collect();
     let mut i = 0;
-    let mut cycle = 0;
+    let mut cycle = 1;
     loop {
         let line = &input_lines[i];
         if !line.contains(OP_NOOP) {
@@ -32,11 +32,11 @@ pub fn solve(input_lines: Vec<String>, sum_cycles: &Vec<usize>) -> i32 {
                     let val: i32 = lines_as_pieces[i][1].parse().unwrap();
                     for _j in 0..ADDX_DURATION {
                         // println!("line: {:?}", lines_as_pieces[i]);
-                        cycle += 1;
                         if sum_cycles.contains(&cycle) {
                             println!("multiplying with {} for cycle {}", reg_val, cycle);
-                            sum_of_wanted_cycles += reg_val;
+                            solution += reg_val * cycle as i32;
                         }
+                        cycle += 1;
                     }
                     reg_val += val;
                 }
@@ -46,17 +46,17 @@ pub fn solve(input_lines: Vec<String>, sum_cycles: &Vec<usize>) -> i32 {
                 }
             }
         } else {
-            cycle += 1;
             if sum_cycles.contains(&cycle) {
                 println!("multiplying with {} for cycle {}", reg_val, cycle);
-                sum_of_wanted_cycles *= reg_val;
+                solution += reg_val * cycle as i32;
             }
+            cycle += 1;
         }
         i += 1;
 
         if (i >= lines_as_pieces.len()) {
             println!("reg_val {}", reg_val);
-            return sum_of_wanted_cycles;
+            return solution;
         }
     }
 }
