@@ -27,8 +27,8 @@ fn main() {
     // println!("Solution: {}", day7a::solve(read_input(7)));
     // println!("Solution: {}", day7b::solve(read_input(7)));
     // println!("Solution: {}", day8a::solve(read_input(8)));
-    println!("Solution: {}", day8b::solve(read_input(8)));
-    // println!("Solution: {}", day9a::solve(read_input(9)));
+    // println!("Solution: {}", day8b::solve(read_input(8)));
+    println!("Solution: {}", day9a::solve(read_input(9)));
 }
 
 
