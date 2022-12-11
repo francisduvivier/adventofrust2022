@@ -49,24 +49,29 @@ pub fn solve(input_lines: Vec<String>) -> i32 {
 }
 
 fn calc_score(map: &Vec<Vec<(String, i32)>>, transposed_map: &Vec<Vec<(String, i32)>>, x: usize, y: usize) -> i32 {
-    let mut score = 1;
-    let vec = map[x].clone();
-    let (left, right_slice) = vec.split_at(y);
-    score *= count_visibles(&right_slice.to_vec()); //TODO remove first elem or slice different
-    let mut left_side = left.to_vec();
-    left_side.reverse();
-    score *= count_visibles(&left_side);
-
+    let mut score = calc_score_1_dir(&map, x, y);
+    score *= calc_score_1_dir(&transposed_map, y, x);
     score
 }
 
-fn count_visibles(pairs: &Vec<(String, i32)>) -> i32 {
-    let mut highest = -1;
+fn calc_score_1_dir(map: &&Vec<Vec<(String, i32)>>, x: usize, y: usize) -> i32 {
+    let vantage_height = map[x][y].1;
+    let mut score = 1;
+    let left = &map[x][..y];
+    let right_slice = &map[x][y + 1..];
+    score *= count_visibles(&right_slice.to_vec(), vantage_height);
+    let mut left_side = left.to_vec();
+    left_side.reverse();
+    score *= count_visibles(&left_side, vantage_height);
+    score
+}
+
+fn count_visibles(pairs: &Vec<(String, i32)>, max_size: i32) -> i32 {
     let mut count = 0;
     for pair in pairs {
-        if (pair.1 > highest) {
-            highest = pair.1;
-            count += 1;
+        count += 1;
+        if (pair.1 >= max_size) {
+            break;
         }
     }
     return count;
