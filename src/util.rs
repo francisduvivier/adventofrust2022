@@ -32,6 +32,6 @@ pub fn vec_to_set(vec: &Vec<char>) -> HashSet<&char> {
     HashSet::from_iter(vec)
 }
 
-pub fn coords_to_key(x: usize, y: usize) -> String {
-    format!("{},{}", x, y).to_string()
+pub fn coords_to_key(x_y: (usize, usize)) -> String {
+    format!("{},{}", x_y.0, x_y.1).to_string()
 }
