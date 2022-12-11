@@ -31,3 +31,7 @@ pub fn int_from_char_in_lines(input_lines: &Vec<String>, x: usize, y: usize) -> 
 pub fn vec_to_set(vec: &Vec<char>) -> HashSet<&char> {
     HashSet::from_iter(vec)
 }
+
+pub fn coords_to_key(x: usize, y: usize) -> String {
+    format!("{},{}", x, y).to_string()
+}
