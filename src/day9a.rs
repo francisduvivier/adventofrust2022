@@ -15,8 +15,8 @@ use crate::{coords_to_key, int_from_char_in_lines};
 pub fn solve(input_lines: Vec<String>) -> usize {
     // Logic: take place of head unless currently still attached.
     let mut visited_by_tail: HashSet<String> = HashSet::new();
-    let mut previous_head_pos = (0 as usize, 0 as usize);
-    let mut tail_pos = (0 as usize, 0 as usize);
+    let mut previous_head_pos = (0 as i32, 0 as i32);
+    let mut tail_pos = (0 as i32, 0 as i32);
 
     for motion in input_lines {
         let split: Vec<&str> = motion.split(" ").collect();
@@ -27,6 +27,9 @@ pub fn solve(input_lines: Vec<String>) -> usize {
             if pos_dist(new_head_pos, tail_pos) > 1 {
                 tail_pos = previous_head_pos;
                 visited_by_tail.insert(coords_to_key(previous_head_pos));
+                println!("updating tail pos, head {:?}", new_head_pos);
+            } else {
+                println!("not updating tail pos, head {:?}", new_head_pos);
             }
             previous_head_pos = new_head_pos
         }
@@ -35,15 +38,18 @@ pub fn solve(input_lines: Vec<String>) -> usize {
     return visited_by_tail.len();
 }
 
-fn update_pos(pos: (usize, usize), dir: &str) -> (usize, usize) {
+fn update_pos(pos: (i32, i32), dir: &str) -> (i32, i32) {
     match dir {
         "U" => (pos.0, pos.1 + 1),
+        "D" => (pos.0, pos.1 - 1),
+        "L" => (pos.0 - 1, pos.1),
+        "R" => (pos.0 + 1, pos.1),
         _ => (pos.0, pos.1)
     }
 }
 
-fn pos_dist(p0: (usize, usize), p1: (usize, usize)) -> usize {
+fn pos_dist(p0: (i32, i32), p1: (i32, i32)) -> usize {
     let horizontal_dist: i32 = (p0.0 as i32) - (p1.0 as i32);
     let vertical_dist = (p0.1 as i32) - (p1.1 as i32);
-    max(vertical_dist.abs() as usize, horizontal_dist.abs() as usize)
+    max(horizontal_dist.abs() as usize, vertical_dist.abs() as usize)
 }

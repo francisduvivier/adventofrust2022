@@ -16,7 +16,7 @@ pub fn solve(input_lines: Vec<String>) -> i32 {
     for x in 0..input_lines.len() {
         map.push(vec![]);
         for y in 0..input_lines[x].len() {
-            let key = coords_to_key((x, y));
+            let key = coords_to_key((x as i32, y as i32));
             let new_pair = (key, int_from_char_in_lines(&input_lines, x, y));
             map[x].push(new_pair);
         }
