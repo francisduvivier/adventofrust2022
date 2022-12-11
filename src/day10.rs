@@ -22,7 +22,8 @@ pub fn solve(input_lines: Vec<String>, sum_cycles: &Vec<usize>) -> i32 {
     let mut reg_val: i32 = 1;
     let lines_as_pieces: Vec<Vec<&str>> = input_lines.iter().map(|line| line.split(" ").collect()).collect();
     let mut i = 0;
-    let mut cycle = 1;
+    let mut cycle: usize = 1;
+    tests();
     loop {
         let line = &input_lines[i];
         if !line.contains(OP_NOOP) {
@@ -32,8 +33,17 @@ pub fn solve(input_lines: Vec<String>, sum_cycles: &Vec<usize>) -> i32 {
                     let val: i32 = lines_as_pieces[i][1].parse().unwrap();
                     for _j in 0..ADDX_DURATION {
                         // println!("line: {:?}", lines_as_pieces[i]);
+                        if in_sprite(reg_val, cycle)
+                        {
+                            print!("#")
+                        } else {
+                            print!(".")
+                        }
+                        if (cycle % 40 == 0) {
+                            println!("");
+                        }
                         if sum_cycles.contains(&cycle) {
-                            println!("multiplying with {} for cycle {}", reg_val, cycle);
+                            // println!("multiplying with {} for cycle {}", reg_val, cycle);
                             solution += reg_val * cycle as i32;
                         }
                         cycle += 1;
@@ -46,8 +56,17 @@ pub fn solve(input_lines: Vec<String>, sum_cycles: &Vec<usize>) -> i32 {
                 }
             }
         } else {
+            if in_sprite(reg_val, cycle)
+            {
+                print!("#")
+            } else {
+                print!(".")
+            }
+            if (cycle % 40 == 0) {
+                println!("");
+            }
             if sum_cycles.contains(&cycle) {
-                println!("multiplying with {} for cycle {}", reg_val, cycle);
+                // println!("multiplying with {} for cycle {}", reg_val, cycle);
                 solution += reg_val * cycle as i32;
             }
             cycle += 1;
@@ -59,6 +78,23 @@ pub fn solve(input_lines: Vec<String>, sum_cycles: &Vec<usize>) -> i32 {
             return solution;
         }
     }
+}
+
+fn tests() {
+    assert_eq!(pixel_location(40), 40);
+    assert_eq!(pixel_location(41), 1);
+    assert_eq!(pixel_location(1), 1);
+    assert_eq!(pixel_location(2), 2);
+    assert!(in_sprite(1, 2));
+    assert!(in_sprite(1, 1));
+}
+
+fn in_sprite(reg_val: i32, mut cycle: usize) -> bool {
+    (pixel_location(cycle) - (reg_val + 1)).abs() <= 1
+}
+
+fn pixel_location(cycle: usize) -> i32 {
+    ((cycle as i32 - 1) % 40) + 1
 }
 
 fn sign(p0: i32) -> i32 {
