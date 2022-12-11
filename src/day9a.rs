@@ -22,6 +22,7 @@ pub fn solve(input_lines: Vec<String>) -> usize {
         let split: Vec<&str> = motion.split(" ").collect();
         let (dir, times_string) = (split[0].to_string(), split[1].to_string());
         let times: u32 = times_string.parse().unwrap();
+        visited_by_tail.insert(coords_to_key((0, 0)));
         for _i in 0..times {
             let new_head_pos = update_pos(previous_head_pos, &dir);
             if pos_dist(new_head_pos, tail_pos) > 1 {
