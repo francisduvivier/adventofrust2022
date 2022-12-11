@@ -30,13 +30,13 @@ pub fn solve(input_lines: Vec<String>, knots: usize) -> usize {
                 if pos_dist(knot_pos[k], knot_pos[k - 1]) > 1 {
                     previous_knot_pos[k] = knot_pos[k];
                     knot_pos[k] = previous_knot_pos[k - 1];
-                    // println!("updating tail pos, head {:?}", new_head_pos);
+                    // println!("updating tail pos, head {:?}", knot_pos[k - 1]);
                 } else {
-                    // println!("not updating tail pos, head {:?}", new_head_pos);
+                    // println!("not updating tail pos, head {:?}", knot_pos[k - 1]);
                 }
             }
 
-            visited_by_tail.insert(coords_to_key(previous_knot_pos.last().unwrap()));
+            visited_by_tail.insert(coords_to_key(knot_pos.last().unwrap()));
         }
     }
 
