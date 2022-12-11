@@ -22,6 +22,12 @@ pub fn char_code(letter: char) -> u8 {
 }
 
 
+pub fn int_from_char_in_lines(input_lines: &Vec<String>, x: usize, y: usize) -> i32 {
+    let x1: Vec<char> = input_lines[x].chars().collect();
+    let x2: i32 = x1[y].to_string().parse().unwrap();
+    x2
+}
+
 pub fn vec_to_set(vec: &Vec<char>) -> HashSet<&char> {
     HashSet::from_iter(vec)
 }
