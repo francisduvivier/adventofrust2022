@@ -27,9 +27,10 @@ pub fn solve(input_lines: Vec<String>, knots: usize) -> usize {
             previous_knot_pos[0] = knot_pos[0];
             knot_pos[0] = update_pos(knot_pos[0], &dir);
             for k in 1..knots {
-                if pos_dist(knot_pos[k], knot_pos[k - 1]) > 1 {
+                if max_pos_dist(knot_pos[k], knot_pos[k - 1]) > 1 {
                     previous_knot_pos[k] = knot_pos[k];
-                    knot_pos[k] = previous_knot_pos[k - 1];
+                    let dists = post_dists(knot_pos[k - 1], knot_pos[k]);
+                    knot_pos[k] = (knot_pos[k].0 + sign(dists.0), knot_pos[k].1 + sign(dists.1));
                     // println!("updating tail pos, head {:?}", knot_pos[k - 1]);
                 } else {
                     // println!("not updating tail pos, head {:?}", knot_pos[k - 1]);
@@ -43,6 +44,12 @@ pub fn solve(input_lines: Vec<String>, knots: usize) -> usize {
     return visited_by_tail.len();
 }
 
+fn sign(p0: i32) -> i32 {
+    if p0 > 0 { return 1; }
+    if p0 < 0 { return -1; }
+    return 0;
+}
+
 fn update_pos(pos: (i32, i32), dir: &str) -> (i32, i32) {
     match dir {
         "U" => (pos.0, pos.1 + 1),
@@ -53,8 +60,13 @@ fn update_pos(pos: (i32, i32), dir: &str) -> (i32, i32) {
     }
 }
 
-fn pos_dist(p0: (i32, i32), p1: (i32, i32)) -> usize {
+fn max_pos_dist(p0: (i32, i32), p1: (i32, i32)) -> usize {
+    let (horizontal_dist, vertical_dist) = post_dists(p0, p1);
+    max(horizontal_dist.abs() as usize, vertical_dist.abs() as usize)
+}
+
+fn post_dists(p0: (i32, i32), p1: (i32, i32)) -> (i32, i32) {
     let horizontal_dist: i32 = (p0.0 as i32) - (p1.0 as i32);
     let vertical_dist = (p0.1 as i32) - (p1.1 as i32);
-    max(horizontal_dist.abs() as usize, vertical_dist.abs() as usize)
+    (horizontal_dist, vertical_dist)
 }
