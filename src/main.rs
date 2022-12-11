@@ -11,6 +11,7 @@ mod day7b;
 mod day8a;
 mod day8b;
 mod day9;
+mod day10;
 
 pub use util::*;
 
@@ -28,8 +29,9 @@ fn main() {
     // println!("Solution: {}", day7b::solve(read_input(7)));
     // println!("Solution: {}", day8a::solve(read_input(8)));
     // println!("Solution: {}", day8b::solve(read_input(8)));
-    println!("Solution: {}", day9::solve(read_input(9), 2));
-    println!("Solution: {}", day9::solve(read_input(9), 10));
+    // println!("Solution: {}", day9::solve(read_input(9), 2));
+    // println!("Solution: {}", day9::solve(read_input(9), 10));
+    println!("Solution: {}", day10::solve(read_input(10), &vec![20, 60, 100, 140, 180, 220]));
 }
 
 
