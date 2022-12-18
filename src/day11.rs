@@ -89,6 +89,11 @@ impl FromStr for Monkey {
 
 pub fn solve(input_lines: Vec<String>, cycles: usize, should_divide: bool) -> u128 {
     let mut monkeys: Vec<Monkey> = parse_monkeys(input_lines);
+
+    let mut modulo: u128 = 1;
+    {
+        &monkeys.iter().for_each(|m: &Monkey| modulo *= m.test_divider as u128);
+    }
     for i in 0..cycles {
         for m in 0..monkeys.len() {
             while *(&monkeys[m].items.len()) > 0 as usize {
@@ -101,6 +106,7 @@ pub fn solve(input_lines: Vec<String>, cycles: usize, should_divide: bool) -> u1
                 if should_divide {
                     op_result /= 3;
                 }
+                op_result = op_result % modulo;
                 let test_result = op_result % monkey_clone.test_divider as u128 == 0;
                 let true_monkey = monkey_clone.result_monkey_true;
                 let false_monkey = monkey_clone.result_monkey_false;
