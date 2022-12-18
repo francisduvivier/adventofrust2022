@@ -63,18 +63,21 @@ impl FromStr for Monkey {
     fn from_str(description: &str) -> Result<Self, Self::Err> {
         let items = vec![1];
         // Example monkey 0:,  Starting items: 52, 60, 85, 69, 75, 75,  Operation: new = old * 17,  Test: divisible by 13,    If true: throw to monkey 6,    If false: throw to monkey 7,,
-        let re = Regex::new(r"([0-9]+):[^:]+: ([ 0-9,]+),.*old ([+*]) ([0-9]+|old),.*").unwrap();
+        let re = Regex::new(r"([0-9]+):[^:]+: ([ 0-9,]+),.*old ([+*]) ([0-9]+|old),.*by ([0-9]+),.*true:.*key ([0-9]+),.*false:.*key ([0-9]+)[, \n]*").unwrap();
         let caps = re.captures(description).unwrap();
         let id = caps.get(1).unwrap().as_str().parse::<u32>().unwrap();
         let items = caps.get(2).unwrap().as_str().split(", ").map(|number_string| number_string.parse::<u64>().unwrap()).collect::<Vec<u64>>();
         let operator = caps.get(3).unwrap().as_str();
         let operand = caps.get(4).unwrap().as_str();
+        let test_divider = caps.get(5).unwrap().as_str().parse::<u32>().unwrap();
+        let result_monkey_true = caps.get(6).unwrap().as_str().parse::<u32>().unwrap();
+        let result_monkey_false = caps.get(7).unwrap().as_str().parse::<u32>().unwrap();
         Ok(Monkey {
             id,
             op: parse_operation(operator, operand),
-            test_divider: 0,
-            result_monkey_true: 0,
-            result_monkey_false: 0,
+            test_divider,
+            result_monkey_true,
+            result_monkey_false,
             nb_inspections: 0,
             items,
         })
