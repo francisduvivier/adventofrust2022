@@ -34,6 +34,17 @@ fn parse_operation(operator: &str, operand: &str) -> Operation {
     };
 }
 
+fn apply_operation(val: u64, op: Operation) -> u64 {
+    let operand = match op.operand {
+        0 => val,
+        _ => op.operand as u64
+    };
+    match op.operator {
+        ADD => val + operand,
+        MULTIPLY => val * operand
+    }
+}
+
 struct Monkey {
     id: u32,
     op: Operation,
