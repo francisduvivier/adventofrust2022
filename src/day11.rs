@@ -1,24 +1,30 @@
-use std::{env, str};
-use std::cmp::max;
-use std::fs;
-use std::str::Split;
-use std::str::from_utf8;
-use regex::Regex;
-use substring::Substring;
-use std::collections::HashSet;
-use std::collections::HashMap;
-use std::fmt::format;
-use std::iter::FromIterator;
-
-use crate::{coords_to_key, int_from_char_in_lines};
-
-const OP_ADD: &'static str = "+";
-const OP_MULTI: &'static str = "+";
-const OP_DIV: &'static str = "+";
-struct Monkey {
-    // Operation: TODO
+enum Operator {
+    ADD,
+    MULTIPLY,
 }
 
-pub fn solve(input_lines: Vec<String>, sum_cycles: usize) -> i32 {
-    0
+struct Operation {
+    operator: Operator,
+    operand: u64,
+}
+
+struct Monkey {
+    id: u32,
+    op: Operation,
+    test_divider: u32,
+    result_monkey_true: u32,
+    result_monkey_false: u32,
+    nb_inspections: u32,
+    items: Vec<u64>,
+}
+
+pub fn solve(input_lines: Vec<String>, cycles: usize) -> i32 {
+    let monkeys: Vec<Monkey> = parse_monkeys(input_lines);
+    for i in 0..cycles {
+        for monkey in monkeys {
+            // TODO execute action, increase inspections, do test and pass item on
+        }
+    }
+    let sorted_scores = monkeys.map(|m| m.nb_inspections).collect().sort();
+    return sorted_scores[0] * sorted_scores[1];
 }
