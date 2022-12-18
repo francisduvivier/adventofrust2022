@@ -3,11 +3,13 @@ use std::str::FromStr;
 use regex::Regex;
 use crate::day11::Operator::{ADD, MULTIPLY};
 
+#[derive(Debug, Clone, Copy)]
 enum Operator {
     ADD,
     MULTIPLY,
 }
 
+#[derive(Debug, Clone, Copy)]
 struct Operation {
     operator: Operator,
     operand: u32,
@@ -34,7 +36,7 @@ fn parse_operation(operator: &str, operand: &str) -> Operation {
     };
 }
 
-fn apply_operation(val: u64, op: Operation) -> u64 {
+fn apply_operation(val: u64, op: &Operation) -> u64 {
     let operand = match op.operand {
         0 => val,
         _ => op.operand as u64
@@ -45,12 +47,13 @@ fn apply_operation(val: u64, op: Operation) -> u64 {
     }
 }
 
+#[derive(Debug, Clone)]
 struct Monkey {
     id: u32,
     op: Operation,
     test_divider: u32,
-    result_monkey_true: u32,
-    result_monkey_false: u32,
+    result_monkey_true: usize,
+    result_monkey_false: usize,
     nb_inspections: u64,
     items: Vec<u64>,
 }
@@ -70,8 +73,8 @@ impl FromStr for Monkey {
         let operator = caps.get(3).unwrap().as_str();
         let operand = caps.get(4).unwrap().as_str();
         let test_divider = caps.get(5).unwrap().as_str().parse::<u32>().unwrap();
-        let result_monkey_true = caps.get(6).unwrap().as_str().parse::<u32>().unwrap();
-        let result_monkey_false = caps.get(7).unwrap().as_str().parse::<u32>().unwrap();
+        let result_monkey_true = caps.get(6).unwrap().as_str().parse::<usize>().unwrap();
+        let result_monkey_false = caps.get(7).unwrap().as_str().parse::<usize>().unwrap();
         Ok(Monkey {
             id,
             op: parse_operation(operator, operand),
@@ -87,10 +90,24 @@ impl FromStr for Monkey {
 pub fn solve(input_lines: Vec<String>, cycles: usize) -> u64 {
     let mut monkeys: Vec<Monkey> = parse_monkeys(input_lines);
     for i in 0..cycles {
-        for monkey in &mut monkeys {
-            for item in &monkey.items {
-                // TODO execute action, do test and pass item on
-                monkey.nb_inspections += 1;
+        for m in 0..monkeys.len() {
+            while *(&monkeys[m].items.len()) > 0 as usize {
+                let mut item: u64;
+                {
+                    item = monkeys[m].items.pop().unwrap()
+                }
+                let monkey_clone = monkeys[m].clone();
+                let mut op_result = apply_operation(item, &monkey_clone.op);
+                op_result /= 3;
+                let test_result = op_result % monkey_clone.test_divider as u64 == 0;
+                let true_monkey = monkey_clone.result_monkey_true;
+                let false_monkey = monkey_clone.result_monkey_false;
+                if test_result {
+                    monkeys[true_monkey].items.push(op_result);
+                } else {
+                    monkeys[false_monkey].items.push(op_result);
+                }
+                monkeys[m].nb_inspections += 1;
             }
         }
     }
