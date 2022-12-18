@@ -1,4 +1,6 @@
+use std::io::BufRead;
 use std::str::FromStr;
+use regex::Regex;
 
 enum Operator {
     ADD,
@@ -10,10 +12,24 @@ struct Operation {
     operand: u32,
 }
 
-fn parse_operation(line: &str) -> Operation {
+fn parse_operation(operator: &str, operand: &str) -> Operation {
+    let operator: Operator = match operator {
+        "+" => Operator.ADD,
+        "*" => Operator.MULTIPLY,
+        &_ => {
+            assert!(false);
+            Operator.MULTIPLY
+        }
+    };
+    let operand = match operand {
+        "old" => 0 as u32,
+        _ => {
+            operand.parse::<u32>()
+        }
+    };
     return Operation {
-        operator: Operator::ADD, // TODO implement
-        operand: 5, // TODO implement
+        operator,
+        operand,
     };
 }
 
@@ -34,9 +50,16 @@ impl FromStr for Monkey {
     // instance of 'RGB'
     fn from_str(description: &str) -> Result<Self, Self::Err> {
         let items = vec![1];
+        // Example monkey 0:,  Starting items: 52, 60, 85, 69, 75, 75,  Operation: new = old * 17,  Test: divisible by 13,    If true: throw to monkey 6,    If false: throw to monkey 7,,
+        let re = Regex::new(r"([0-9]+):[^:]+: ([ 0-9,]+),.*old ([+*]) ([0-9]+|old),.*").unwrap();
+        let caps = re.captures(description).unwrap();
+        let id = caps.get(1).unwrap().as_str().parse::<u32>().unwrap();
+        let items = caps.get(2).unwrap().as_str().split(", ").map(|number_string| number_string.parse::<u64>().unwrap()).collect::<Vec<u64>>();
+        let operator = caps.get(3).unwrap().as_str();
+        let operand = caps.get(4).unwrap().as_str();
         Ok(Monkey {
-            id: 0,
-            op: parse_operation(""),
+            id,
+            op: parse_operation(operator, operand),
             test_divider: 0,
             result_monkey_true: 0,
             result_monkey_false: 0,
@@ -63,7 +86,7 @@ pub fn solve(input_lines: Vec<String>, cycles: usize) -> u64 {
 fn parse_monkeys(input: Vec<String>) -> Vec<Monkey> {
     let mut monkeys: Vec<Monkey> = vec![];
     let joined = input.join(",");
-    let resplit = joined.split("Monkey ");
+    let resplit = joined.split("Monkey ").filter(|element| !element.is_empty());
     for monkey_description in resplit {
         println!("monkey {}", monkey_description);
         monkeys.push(parse_monkey(monkey_description));
