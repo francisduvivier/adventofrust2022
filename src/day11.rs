@@ -36,10 +36,10 @@ fn parse_operation(operator: &str, operand: &str) -> Operation {
     };
 }
 
-fn apply_operation(val: u64, op: &Operation) -> u64 {
+fn apply_operation(val: u128, op: &Operation) -> u128 {
     let operand = match op.operand {
         0 => val,
-        _ => op.operand as u64
+        _ => op.operand as u128
     };
     match op.operator {
         ADD => val + operand,
@@ -54,8 +54,8 @@ struct Monkey {
     test_divider: u32,
     result_monkey_true: usize,
     result_monkey_false: usize,
-    nb_inspections: u64,
-    items: Vec<u64>,
+    nb_inspections: u128,
+    items: Vec<u128>,
 }
 
 impl FromStr for Monkey {
@@ -69,7 +69,7 @@ impl FromStr for Monkey {
         let re = Regex::new(r"([0-9]+):[^:]+: ([ 0-9,]+),.*old ([+*]) ([0-9]+|old),.*by ([0-9]+),.*true:.*key ([0-9]+),.*false:.*key ([0-9]+)[, \n]*").unwrap();
         let caps = re.captures(description).unwrap();
         let id = caps.get(1).unwrap().as_str().parse::<u32>().unwrap();
-        let items = caps.get(2).unwrap().as_str().split(", ").map(|number_string| number_string.parse::<u64>().unwrap()).collect::<Vec<u64>>();
+        let items = caps.get(2).unwrap().as_str().split(", ").map(|number_string| number_string.parse::<u128>().unwrap()).collect::<Vec<u128>>();
         let operator = caps.get(3).unwrap().as_str();
         let operand = caps.get(4).unwrap().as_str();
         let test_divider = caps.get(5).unwrap().as_str().parse::<u32>().unwrap();
@@ -87,19 +87,21 @@ impl FromStr for Monkey {
     }
 }
 
-pub fn solve(input_lines: Vec<String>, cycles: usize) -> u64 {
+pub fn solve(input_lines: Vec<String>, cycles: usize, should_divide: bool) -> u128 {
     let mut monkeys: Vec<Monkey> = parse_monkeys(input_lines);
     for i in 0..cycles {
         for m in 0..monkeys.len() {
             while *(&monkeys[m].items.len()) > 0 as usize {
-                let mut item: u64;
+                let mut item: u128;
                 {
                     item = monkeys[m].items.pop().unwrap()
                 }
                 let monkey_clone = monkeys[m].clone();
                 let mut op_result = apply_operation(item, &monkey_clone.op);
-                op_result /= 3;
-                let test_result = op_result % monkey_clone.test_divider as u64 == 0;
+                if should_divide {
+                    op_result /= 3;
+                }
+                let test_result = op_result % monkey_clone.test_divider as u128 == 0;
                 let true_monkey = monkey_clone.result_monkey_true;
                 let false_monkey = monkey_clone.result_monkey_false;
                 if test_result {

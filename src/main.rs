@@ -33,7 +33,8 @@ fn main() {
     // println!("Solution: {}", day9::solve(read_input(9), 2));
     // println!("Solution: {}", day9::solve(read_input(9), 10));
     // println!("Solution: {}", day10::solve(read_input(10), &vec![20, 60, 100, 140, 180, 220]));
-    println!("Solution: {}", day11::solve(read_input(11), 20));
+    // println!("Solution: {}", day11::solve(read_input(11), 20, true));
+    println!("Solution: {}", day11::solve(read_input(11), 10000, false));
 }
 
 
