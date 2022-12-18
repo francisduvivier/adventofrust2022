@@ -1,6 +1,7 @@
 use std::io::BufRead;
 use std::str::FromStr;
 use regex::Regex;
+use crate::day11::Operator::{ADD, MULTIPLY};
 
 enum Operator {
     ADD,
@@ -14,17 +15,17 @@ struct Operation {
 
 fn parse_operation(operator: &str, operand: &str) -> Operation {
     let operator: Operator = match operator {
-        "+" => Operator.ADD,
-        "*" => Operator.MULTIPLY,
+        "+" => ADD,
+        "*" => MULTIPLY,
         &_ => {
             assert!(false);
-            Operator.MULTIPLY
+            MULTIPLY
         }
     };
     let operand = match operand {
         "old" => 0 as u32,
         _ => {
-            operand.parse::<u32>()
+            operand.parse::<u32>().unwrap()
         }
     };
     return Operation {
